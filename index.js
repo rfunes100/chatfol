@@ -8,6 +8,8 @@ const   dotenv = require('dotenv')//.config();
 
 const { Client , LocalAuth  } = require('whatsapp-web.js');
 
+const http = require('http');
+const codbar = ''
 
 
 dotenv.config()
@@ -21,15 +23,25 @@ const client = new Client({
 
 
 
-client.on('qr', qr => {
-    qrcode.generate(qr, {small: true});
+
+// client.on('qr', qr => {
+
+
+
+  // qrcode.generate(qr, {small: true}, function (code) {
+  //   console.log('code',code);
+//   } ) 
+
+ //});
+
+  client.on('ready',    ()  => {
+
+  console.log('Client is ready!');
+
 });
 
-    client.on('ready',    ()  => {
-  
-    console.log('Client is ready!');
 
-});
+
 
 
 client.on('message', async message => {
@@ -176,7 +188,7 @@ str = str.substring(0, str.length - 5);
       {
 
       //  console.log('empresa dentro de telefono ', empresa)
-        client.sendMessage(message.from, palabras /* empresa*/  );
+        client.sendMessage(message.from, palabras.substring(17) /* empresa*/  );
 
 
       }
@@ -202,6 +214,73 @@ str = str.substring(0, str.length - 5);
 
 client.initialize();
  
+
+
+
+app.get('/qr', (req, res) => {
+
+
+  //function updateqr() {
+
+ // setInterval(() => {
+    
+   // res.set('Cache-Control', 'no-cache');
+    
+  client.on('qr', qr => {
+
+
+//    const  fecha = Date.now();
+
+    const  fecha = new Date().toLocaleDateString('en-us', { weekday:"long", year:"numeric", month:"short", day:"numeric", hour:"numeric" , minute:"numeric", second:"numeric"}) 
+
+  
+
+
+
+
+    qrcode.generate(qr, {small: true}, function (code) {
+      console.log(code);
+    console.log('refresca Qr', fecha)
+
+
+      res.send(`<!DOCTYPE html>
+
+      <html>
+          <head>
+              <title>titulo de la página</title>
+          </head>
+          <body>
+          <div style="text-align:center" >
+          </div>
+         
+          <h2> Codigo de QR para whassap web  ${fecha} </h2>
+            <pre>${code}</pre>  
+            
+          </body>
+      </html>`)
+     // res.send(`<pre>${code}</pre>`);
+    }) 
+    
+  
+  });
+
+
+  client.on('ready',    ()  => {
+
+    console.log('Client is ready!');
+  
+  });
+
+
+//}, 10000);
+
+
+//setInterval(updateqr, 1 * 30 * 1000);
+
+
+
+
+});
 
 
 app.get('/api/cliente', async (req,res) => {
