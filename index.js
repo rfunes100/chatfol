@@ -8,6 +8,15 @@ const   dotenv = require('dotenv')//.config();
 
 const { Client , LocalAuth  } = require('whatsapp-web.js');
 
+const puppeteer = require('puppeteer');
+
+async function myFunction() {
+  const browser = await puppeteer.launch();
+  const page = await browser.newPage();
+  await page.setDefaultTimeout(10000); // 10 segundos
+  // Resto de tu código aquí
+}
+
 const http = require('http');
 const codbar = ''
 
@@ -36,6 +45,7 @@ const client = new Client({
 
   client.on('ready',    ()  => {
 
+    myFunction();
   console.log('Client is ready!');
 
 });
@@ -246,7 +256,9 @@ app.get('/qr', (req, res) => {
       res.send(`<!DOCTYPE html>
 
       <html>
+     
           <head>
+          <meta http-equiv="refresh" content="60">
               <title>titulo de la página</title>
           </head>
           <body>
