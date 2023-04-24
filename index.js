@@ -62,11 +62,14 @@ client.on('message', async message => {
 
 
 
-
  if (message.body.toLowerCase() === 'menu'){ // verificar si el mensaje es 'empezar cuestionario'
   responses = {}; // reiniciar las respuestas del usuario
-  await client.sendMessage(message.from, 'ingrese su codigo de empleado?'); // enviar la primera pregunta
+  await client.sendMessage(message.from, '1) Recibir comprobante de pago'); // enviar la primera pregunta
 } else if (!responses.codigo){ // si aún no se ha respondido a la primera pregunta
+
+
+  let celular = message.from;
+  celular = celular.substring(0, celular.length - 5);
   
   
   responses.codigo = message.body; // almacenar la respuesta en la variable 'responses'
@@ -80,12 +83,14 @@ client.on('message', async message => {
 //   console.log('responses.codigo ',  message.body)
 
        //  const response = await axios.get('http://svapwebdev41/EvoWebApi/api/Empresas/empresa_pais/hn');
-         const response = await axios.get(`${process.env.EVO_URL}/api/Empleado/GetById/hn${codigoemp}`);
+       const response = await axios.get(`${process.env.EVO_URL}/api/Empleado/GetByTel/${celular}`) ;
+     //    const response = await axios.get(`${process.env.EVO_URL}/api/Empleado/GetById/hn${codigoemp}`);
          const data = response.data;
          empevo = data.Contenido[0].emp_CodEvo
          telefono =  data.Contenido[0].emP_TELEFONO 
    
  
+         
        const ciaempresas = JSON.stringify(data.contenido)
        const empresas = JSON.stringify(data.contenido)
     
@@ -105,7 +110,7 @@ const empresa = JSON.stringify(objeto, null, "\n")
 
 
 
-// console.log(empresa)
+ //console.log(empevo, celular )
  const str = empresa
 const newStr = str.slice(1, -1)
 //console.log(newStr)
@@ -194,7 +199,7 @@ str = str.substring(0, str.length - 5);
 
     //  console.log('numeros',str, telefono,  )
      // console.log('empresa ', empresa)
-      if(str !==   telefono /* data.Contenido[0].emP_TELEFONO */   )
+      if(str ===   telefono /* data.Contenido[0].emP_TELEFONO */   )
       {
 
       //  console.log('empresa dentro de telefono ', empresa)
